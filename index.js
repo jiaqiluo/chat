@@ -7,19 +7,19 @@ app.get('/', function(req,res){
 });
 
 io.on('connection', function(socket){
-	console.log('a user connected');
-
-	socket.on('new user', function(id){
-		io.emit('chat message', 'New User: ' + id);
-	});
+	const _id = socket.id.substr(2, 5);
+	io.emit('chat message', '+ ' + _id + " joins, welcome!");
+	console.log('+ ' + _id);
 
 	socket.on('disconnect', function(){
-		console.log('user disconnected');
+		console.log('- '+ _id);
+		io.emit('chat message', '- '+ _id +' leaves');
+
 	});
 
 	socket.on('chat message', function(msg){
-		io.emit('chat message', msg);
-		console.log('message:' + msg);
+		io.emit('chat message', _id + ': ' + msg);
+		console.log('message:' + _id + ': ' + msg);
 	});
 });
 http.listen(3000, function(){
