@@ -18,11 +18,15 @@
   <script>
     $(function () {
       var socket = io();
+      var id = Math.random().toString(36).substr(2, 5);
+      socket.emit('new user', id);
+
       $('form').submit(function(){
         socket.emit('chat message', $('#m').val());
         $('#m').val('');
         return false;
       });
+      
       socket.on('chat message', function(msg){
         $('#messages').append($('<li>').text(msg));
       });
