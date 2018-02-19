@@ -5,15 +5,20 @@ var io = require('socket.io')(http);
 app.get('/', function(req,res){
 	res.sendFile(__dirname+'/index.html');
 });
+var user_list = [];
 
 io.on('connection', function(socket){
 	const _id = socket.id.substr(2, 5);
+	user_list.push(_id);
 	io.emit('chat message', '+ ' + _id + " joins, welcome!");
 	console.log('+ ' + _id);
+	io.emit('users', user_list);
 
 	socket.on('disconnect', function(){
 		console.log('- '+ _id);
+		user_list.splice(user_list.indexOf(_id), 1);
 		io.emit('chat message', '- '+ _id +' leaves');
+		io.emit('users', user_list);
 
 	});
 

@@ -8,9 +8,13 @@
       form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
       form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
       form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #parent { display: flex; margin-top: 15px;}
+      #left { width: 60%;}
+      #right {width: 40%;}
+      #messages { list-style-type: none; margin: 0; padding: 0;}
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+      #brand {font-size: 40px; color: aqua; text-align: center;}
     </style>
   </head>
   <script src="/socket.io/socket.io.js"></script>
@@ -30,10 +34,27 @@
       socket.on('chat message', function(msg){
         $('#messages').append($('<li>').text(msg));
       });
+      
+      socket.on('users', function(user_list){
+        $('#users').empty();
+        $.each(user_list, function(index, val) {
+          $('#users').append($('<li>').text(val));
+        });
+      });
     });
   </script>
   <body>
-    <ul id="messages"></ul>
+    <h1 id="brand"> ChatCafe </h1>
+    <div id="parent">
+      <div id="left">
+        <h3>Messages</h3>
+        <ul id="messages"></ul>
+      </div>
+      <div id="right">
+       <h3> Online Users</h3>
+        <ur id="users"> </ul>
+      </div> 
+    </div>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
