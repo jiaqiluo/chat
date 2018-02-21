@@ -6,10 +6,12 @@ app.get('/', function(req,res){
 	res.sendFile(__dirname+'/index.html');
 });
 var user_list = [];
+var sockets = [];
 
 io.on('connection', function(socket){
 	const _id = socket.id.substr(2, 5);
 	user_list.push(_id);
+	sockets.push(socket);
 	io.emit('chat message', '+ ' + _id + " joins, welcome!");
 	console.log('+ ' + _id);
 	io.emit('users', user_list);
@@ -17,6 +19,7 @@ io.on('connection', function(socket){
 	socket.on('disconnect', function(){
 		console.log('- '+ _id);
 		user_list.splice(user_list.indexOf(_id), 1);
+		user_list.splice(user_list.indexOf(socket), 1);
 		io.emit('chat message', '- '+ _id +' leaves');
 		io.emit('users', user_list);
 
